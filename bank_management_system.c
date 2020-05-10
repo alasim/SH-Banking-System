@@ -194,7 +194,7 @@ void LoginAcount()
             name = tempt->name;
             pin = tempt->pin;
             userAccount = tempt;
-            break;
+            break;// done, got the user.
         }
         tempt=tempt->link;
     }
@@ -209,7 +209,7 @@ void LoginAcount()
         if(pin==inputPin)
         {
             printf("\n\t\t\tWelcome to your account, %s",name);
-            intoAccount(userAccount);
+            intoAccount(userAccount);// login successful
         }
         else
         {
