@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
+#include <dos.h>
+#include <dir.h>
+#include <time.h>
+
 
 typedef struct Account account;
 struct Account
@@ -13,6 +18,18 @@ struct Account
     account* link;
 };
 account* head;
+char timeBuf[80];
+char* currentTime(){
+   time_t rawtime;
+   struct tm *info;
+   char buffer[80];
+   time( &rawtime );
+   info = localtime( &rawtime);
+   strftime(buffer,80,"%x - %I:%M%p", info);
+//   printf("Formatted date & time : |%s|\n", buffer );
+   strcpy(timeBuf, buffer);
+return timeBuf;
+}
 int Menu()
 {
     system("cls");
@@ -24,7 +41,7 @@ int Menu()
     printf("\n\t\t\t[2] : Login Account");
     printf("\n\t\t\t[3] : Admin Login");
     printf("\n\t\t\t[4] : Exit");
-    printf("\n\n\t\t\t============================================");
+    printf("\n\n\t\t\t=============================================");
     printf("\n\t\t\t>> Enter Your Choice(1-4): ");
     scanf("%d",&option);
 
@@ -32,27 +49,14 @@ int Menu()
     return option;
 }
 
-void init(int acNo,int pin,int balance,char name[],char mess[])
+void init(int acNo,int pin,int balance,char name[],char mess[]) // rebuild the linked list that comes from file.
 {
-
     account* newAccount = (account*)malloc(sizeof(account));
     newAccount->acNo = acNo;
     newAccount->pin = pin;
     newAccount->balance = balance;
     strcpy(newAccount->name,name);
     strcpy(newAccount->message,mess);
-//    printf("\n\t\t\t-------- Account Details ----------");
-//    printf("\n\t\t\tAccount number: %d",newAccount->acNo);
-//    printf("\n\t\t\tAccount pin: %d",newAccount->pin);
-//    printf("\n\t\t\tAccount name: %s",newAccount->name);
-//    printf("\n\t\t\tFirst deposit: %d",newAccount->balance);
-//    printf("\n\t\t\t-------------okay!-----------------");
-//    printf("\n\n\t\t\ty/n: ");
-//    fflush(stdin);
-//    char y;
-//    scanf("%c",&y);
-//    if(y!='y')
-//        CreateAccount();
     newAccount->link=head;
     head = newAccount;
 }
@@ -107,9 +111,10 @@ start:
     scanf("%d",&newAccount->acNo);
     if(exist(newAccount->acNo))
     {
-        system("color cf");
+        SetColor(12);
         printf("\n\n\t\t->>> Sorry, This(%d) account number already exist",newAccount->acNo);
         printf("\n\t\t     in our system. Try another new.");
+        SetColor(0);
         printf("\n\n");
         system("pause");
         goto start;
@@ -125,7 +130,7 @@ start:
     //strcpy(newAccount->message,"Welcome to SH Banking system.");
     sprintf(newAccount->message,">> First deposited %d TK.",newAccount->balance);
     //newAccount->message="Hello";
-
+    SetColor(10);
     printf("\n\t\t\t-------- Account Details ----------");
     printf("\n\t\t\t%-25s %-15d","Account number:",newAccount->acNo);
     printf("\n\t\t\t%-25s %-15d","Account pin:",newAccount->pin);
@@ -137,33 +142,13 @@ start:
     scanf("%c",&y);
     if(y!='y')
         CreateAccount();
+    SetColor(0);
     newAccount->link=head;
     head = newAccount;
 
     //all account rewrite to Accounts.txt file with new node
     reinit();
-//    FILE *fp,*fp_root;
-//    fp_root = fopen("Accounts.txt","wb");
-//    if(fp_root==NULL)
-//    {
-//        printf("->>> Accounts.txt couldn't open.");
-//        exit(1);
-//    }
-//    account* tempt = head;
-//    while(tempt!=NULL)
-//    {
-//        account a;
-//        a.acNo = tempt->acNo;
-//        a.pin = tempt->pin;
-//        a.balance = tempt->balance;
-//        strcpy(a.name,tempt->name);
-//        strcpy(a.message,tempt->message);
-//        a.link = tempt->link;
-//        fwrite(&a, sizeof(a), 1, fp_root);
-//        tempt=tempt->link;
-//        //system("pause");
-//    }
-//    fclose(fp_root);
+
     FILE* fp;
     char filePath[20];// creating new file and save on it
     sprintf(filePath,"account_%d.txt",newAccount->acNo);
@@ -173,11 +158,13 @@ start:
         printf("\n->>> Can't create new file.");
         exit(1);
     }
-    fprintf(fp,"->>> First deposit %d TK added.\n",newAccount->balance);
+    fprintf(fp,"%s ->>> First deposit %d TK.\n",currentTime(),newAccount->balance);
     fclose(fp);// file closed
 
     system("cls");// menu after creating account successfully
+    SetColor(10);
     printf("\n\t\t\tAccount created successfully.\n");
+    SetColor(16);
     printf("\n\n\t\t\t=============== Next ==============\n");
     printf("\n\t\t\t[1] : Login your account.");
     printf("\n\t\t\t[2] : Main menu.");
@@ -207,12 +194,15 @@ void LoginAcount()
             name = tempt->name;
             pin = tempt->pin;
             userAccount = tempt;
+            break;
         }
         tempt=tempt->link;
     }
     if(name!=NULL)
     {
+        SetColor(10);
         printf("\n\t\t\t\t> Welcome, %s!",name);
+        SetColor(0);
         printf("\n\n\t\t\t>> Type your pin to continue: ");
 
         scanf("%d",&inputPin);
@@ -223,17 +213,19 @@ void LoginAcount()
         }
         else
         {
-            system("color cf");
+            SetColor(12);
             printf("\n\t\t\t->>> Invalid pin. Try again");
+            SetColor(0);
             printf("\n\n");
             system("pause");
         }
     }
     else
     {
-        system("color cf");
+        SetColor(12);
         printf("\n\t\t\t->>> %d account doesn't exist.",accountNumber);
         printf("\n\t\t\t->>> Create new account. Or try again.");
+        SetColor(0);
          printf("\n\n");
         system("pause");
         //Menu();
@@ -248,11 +240,11 @@ startAgain:
     system("color 2f");
     system("cls");
     printf("\n\t\t\t************* Welcome to your account *************");
-    printf("\n\n\t\t\tAccount number: %d",user->acNo);
-    printf("\n\t\t\tAccount name: %s",user->name);
-    printf("\n\t\t\tBalance: %d",user->balance);
-    printf("\n\t\t\tLast action: %s",user->message);
-    printf("\n\n\n\t\t\t=========== Options ==============\n");
+    printf("\n\n\t\t\t%25s %d","Account number:",user->acNo);
+    printf("\n\t\t\t%25s %s","Account name:",user->name);
+    printf("\n\t\t\t%25s %s","Last action:",user->message);
+    printf("\n\t\t\t%25s %d TK","Balance:",user->balance);
+    printf("\n\n\n\t\t\t=========== Actions ==============\n");
     printf("\n\t\t\t[1] : Deposit");
     printf("\n\t\t\t[2] : Withdraw");
     printf("\n\t\t\t[3] : Balance transfer");
@@ -286,7 +278,7 @@ startAgain:
         user->balance = user->balance + amount;
         sprintf(user->message,"Deposited %d TK.",amount);
 
-        fprintf(my_fp,"->>> Deposited %d TK.\n",amount);// working with file
+        fprintf(my_fp,"%s ->>> Deposited %d TK.\n",currentTime(),amount);// working with file
         fclose(my_fp);// file closed
 
         printf("\n\t\t\t->>> New balance: %d TK.",user->balance);
@@ -300,15 +292,16 @@ startAgain:
         scanf("%d",&amount);
         if(user->balance<amount)
         {
+            SetColor(12);
             printf("\n\t\t\t->>> Insufficient balance.\n");
-            system("color cf");
+            SetColor(16);
         }
         else
         {
             user->balance= user->balance-amount;
             printf("\n\t\t\t->>> Withdrawn successful.");
             sprintf(user->message,"Withdrawn %d TK.",amount);
-            fprintf(my_fp,"->>> Withdrawn %d TK.\n",amount);// working with file
+            fprintf(my_fp,"%s ->>> Withdrawn %d TK.\n",currentTime(),amount);// working with file
             fclose(my_fp);// file closed
             printf("\n\t\t\t->>> Current Balance: %d TK.",user->balance);
             reinit();// update nodes on file
@@ -322,8 +315,9 @@ startAgain:
         scanf("%d",&acNum);
         if(acNum==user->acNo)
         {
-            system("color cf");
+            SetColor(12);
             printf("\n\t\t\t->>> You can't transfer your balance to your own account.");
+            SetColor(16);
             printf("\n\n");
             system("pause");
             goto startAgain;
@@ -347,8 +341,9 @@ startAgain:
 
             if(user->balance<amount)
             {
+                SetColor(12);
                 printf("\n\t\t\t->>> Insufficient balance.");
-                system("color cf");
+                SetColor(16);
                 printf("\n\n");
                 system("pause");
                 goto startAgain;
@@ -358,8 +353,8 @@ startAgain:
                 tempt->balance = tempt->balance + amount;
                 user->balance = user->balance - amount;
                 printf("\n\t\t\t->>> Transfer balance successfully to %s's account.\n\n\n",name);
-                sprintf(user->message,">> Transfered balance %d TK to %s.\n",amount,tempt->name);
-                fprintf(my_fp,"->>> Transfered balance %d TK to %s.\n",amount,tempt->name);// working with file
+                sprintf(user->message,">> Transfered balance %d TK to %s.",amount,tempt->name);
+                fprintf(my_fp,"%s ->>> Transfered balance %d TK to %s.\n",currentTime(),amount,tempt->name);// working with file
                 fclose(my_fp);// file closed
 
 
@@ -372,7 +367,7 @@ startAgain:
                     printf("\n->>> Can't create new file.");
                     exit(1);
                 }
-                fprintf(other_fp,"->>> Balance added %d TK by %s.",amount,user->name);// working with file
+                fprintf(other_fp,"%s ->>> Balance added %d TK by %s.\n",currentTime(),amount,user->name);// working with file
                 fclose(other_fp);// file closed
                 reinit();// update nodes on file
                 printf("\n\n");
@@ -382,8 +377,9 @@ startAgain:
         }
         else
         {
+            SetColor(12);
             printf("\t\t\t->>> Account doesn't found.");
-            system("color cf");
+            SetColor(0);
             printf("\n\n");
             system("pause");
             goto startAgain;
@@ -394,9 +390,12 @@ startAgain:
         system("pause");
         goto startAgain;
 
+    case 5:
+        return;
     }
     printf("\n\n");
     system("pause");
+    goto startAgain;
 }
 void displayTransactions(int acNo)
 {
@@ -410,7 +409,7 @@ void displayTransactions(int acNo)
         printf("\n->>> Can't open this account file.");
         exit(1);
     }
-    printf("\n>>>> Your all transactions-:\n\n");
+    printf("\nYour all transactions   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><>\n\n");
     while((ch=fgetc(fp_tran))!=EOF)
     {
         printf("%c",ch);
@@ -422,14 +421,15 @@ void AddminLogin()
 {
     system("color 0a");
     system("cls");
-    printf("\n\t\t\t->> Hey, admin password is 123. ;) ;)");
+    printf("\n\t\t\t->> Hey admin, password is 123. ;) ;)");
     printf("\n\t\t\t>> Type admin password: ");
     int adPass;
     scanf("%d",&adPass);
     if(adPass!=123)
     {
-        system("color cf");
+        SetColor(12);
         printf("\n\t\t\t->>> Wrong password. try with 123.");
+         SetColor(10);
         printf("\n\n");
         system("pause");
         return;
@@ -447,7 +447,7 @@ void AddminLogin()
         printf("\n\t\t\tAccount pin: *******");
         printf("\n\t\t\tAccount name: %s",tempt->name);
         printf("\n\t\t\tBalance: %d",tempt->balance);
-        printf("\n\t\t\t---------------END------------------\n");
+        printf("\n\t\t\t---------------END-----------------\n");
         tempt=tempt->link;
     }
     if(tempt==head)
@@ -455,10 +455,8 @@ void AddminLogin()
     printf("\n\n");
     system("pause");
 }
-void test()
-{
-    //printf("\nTesting mood on.\n");
-    account accountOll;
+void readFile(){
+account accountOll;
     FILE *tfp;
     tfp = fopen("Accounts.txt","rb");
     if(tfp==NULL)
@@ -470,14 +468,20 @@ void test()
     {
         init(accountOll.acNo,accountOll.pin,accountOll.balance,accountOll.name,accountOll.message);
     }
-    //printf("\n->>> Linke list created successfully.\n");
-    //system("pause");
+}
+void test()
+{
+    printf("\nTesting mood on.\n\n");
+    printf("%s",currentTime());
+    printf("\n\n");
+    system("pause");
 }
 int main()
 {
     system("color f0");
     head = NULL;
-    test();
+//    test();
+    readFile();
 
 menu:
     ;
@@ -502,11 +506,27 @@ menu:
     case 4:
         return 0;
     default:
-        printf("\n->>> Invalid Option. Try again.");
+        SetColor(12);
+        printf("\n\t\t\t->>> Invalid Option. Try again.");
+       SetColor(0);
         printf("\n\n");
         system("pause");
         system("cls");
         goto menu;
     }
     return 0;
+}
+void SetColor(int ForgC)
+{
+    WORD wColor;
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    //We use csbi for the wAttributes word.
+    if(GetConsoleScreenBufferInfo(hStdOut, &csbi))
+    {
+        //Mask out all but the background attribute, and add in the forgournd color
+        wColor = (csbi.wAttributes & 0xF0) + (ForgC & 0x0F);
+        SetConsoleTextAttribute(hStdOut, wColor);
+    }
+    return;
 }

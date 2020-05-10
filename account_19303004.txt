@@ -1,4 +1,0 @@
-->>> First deposit 3000 TK added.
-->>> Deposited 1000 TK.
-->>> Withdrawn 2000 TK.
-->>> Transfered balance 1500 TK to Mehedi Hasan.

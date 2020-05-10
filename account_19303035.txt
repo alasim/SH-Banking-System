@@ -1,2 +1,12 @@
-->>> First deposit 3000 TK added.
-->>> First deposit 1 TK added.
+05/08/20 - 04:52PM ->>> First deposit 3000 TK.
+05/08/20 - 04:53PM ->>> Withdrawn 1000 TK.
+05/08/20 - 04:54PM ->>> Deposited 1000 TK.
+05/08/20 - 04:54PM ->>> Transfered balance 1000 TK to Samira Islam Rim.
+05/08/20 - 04:56PM ->>> Balance added 1500 TK by Samira Islam Rim.
+05/09/20 - 12:22AM ->>> Transfered balance 2000 TK to Sumaiya Ena.
+05/09/20 - 12:23AM ->>> Withdrawn 500 TK.
+05/09/20 - 12:23AM ->>> Deposited 3000 TK.
+05/09/20 - 12:58AM ->>> Balance added 1200 TK by Samira Islam Rim.
+05/09/20 - 01:18AM ->>> Balance added 1500 TK by Sumaiya Ena.
+05/09/20 - 02:54PM ->>> Withdrawn 1000 TK.
+05/10/20 - 04:01AM ->>> Deposited 6000 TK.

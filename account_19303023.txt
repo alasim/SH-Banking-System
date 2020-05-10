@@ -1,0 +1,7 @@
+05/08/20 - 04:53PM ->>> First deposit 3000 TK.
+05/08/20 - 04:54PM ->>> Balance added 1000 TK by Hasan Mahmud.
+05/08/20 - 04:56PM ->>> Transfered balance 1500 TK to Hasan Mahmud.
+05/08/20 - 04:56PM ->>> Withdrawn 1000 TK.
+05/08/20 - 05:06PM ->>> Balance added 500 TK by Sumaiya Ena.
+05/09/20 - 12:48AM ->>> Deposited 1500 TK.
+05/09/20 - 12:58AM ->>> Transfered balance 1200 TK to Hasan Mahmud.

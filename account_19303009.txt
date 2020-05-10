@@ -1,0 +1,6 @@
+05/08/20 - 04:53PM ->>> First deposit 3000 TK.
+05/08/20 - 05:05PM ->>> Withdrawn 2000 TK.
+05/08/20 - 05:06PM ->>> Transfered balance 500 TK to Samira Islam Rim.
+05/09/20 - 12:22AM ->>> Balance added 2000 TK by Hasan Mahmud.
+05/09/20 - 01:18AM ->>> Transfered balance 1500 TK to Hasan Mahmud.
+05/09/20 - 01:19AM ->>> Withdrawn 500 TK.
